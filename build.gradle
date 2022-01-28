@@ -32,7 +32,7 @@ dependencies {
     implementation("io.micronaut.flyway:micronaut-flyway")
     implementation("io.micronaut.micrometer:micronaut-micrometer-core")
     implementation("io.micronaut.micrometer:micronaut-micrometer-registry-prometheus")
-    implementation("io.micronaut.reactor:micronaut-reactor")
+    implementation("io.micronaut.rxjava2:micronaut-rxjava2")
     implementation("io.micronaut.reactor:micronaut-reactor-http-client")
     implementation("io.micronaut.sql:micronaut-jdbc-hikari")
     implementation("jakarta.annotation:jakarta.annotation-api")

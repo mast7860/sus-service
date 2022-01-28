@@ -110,7 +110,4 @@ sample test data
 
 ## TODO:
 - unit tests
-- custom exception handling
-- logging
-- metrics
 - session handling

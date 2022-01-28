@@ -17,5 +17,15 @@ services:
     expose:
       - '3306'
 
+  sus-service:
+    build:
+      context: ../../sus-service
+    environment:
+      - DB_HOST=mysql-server
+      - DB_PORT=3306
+      - DB_NAME=susdb
+      - DB_USERNAME=sususer
+      - DB_PASSWORD=password
+
 volumes:
   db_data: {}

@@ -1,6 +1,8 @@
 package com.sus.service;
 
+import com.sus.error.SusException;
 import com.sus.model.GlobalStats;
+import com.sus.model.SaveResponse;
 import com.sus.model.SusRequest;
 import com.sus.model.Token;
 import com.sus.model.UsabilityResponse;
@@ -36,11 +38,11 @@ public class SusService {
         return token;
     }
 
-    public void saveUserResponse(SusRequest request) {
+    public SaveResponse saveUserResponse(SusRequest request) {
 
         var sessionData = susRepository.getSession(request.getToken());
         if (sessionData.getTimeSpentInSec() != null) {
-            throw new RuntimeException("duplicate session");
+            throw new SusException("duplicate session");
         }
         var oddSum = request.getUsabilityResponses().stream().filter(scoreCard -> scoreCard.getQuestionNumber() % 2 != 0)
                 .mapToInt(UsabilityResponse::getScore).sum();
@@ -48,15 +50,24 @@ public class SusService {
                 .mapToInt(UsabilityResponse::getScore).sum();
 
         var totalSum = ((oddSum - 5) + (25 - evenSum));
+        log.debug("totalSum=" + totalSum);
 
         var percentile = totalSum * 2.5;
+        log.debug("percentile=" + percentile);
 
         var answers = request.getUsabilityResponses().stream()
                 .map(usabilityResponse -> usabilityResponse.getQuestionNumber() + "=" + usabilityResponse.getScore())
                 .collect(Collectors.joining(","));
 
+        log.debug("answers=" + answers);
+
+        var grade = calculateGrade(percentile);
+        log.debug("grade=" + grade);
+
         susRepository.updateSession(sessionData);
-        susRepository.saveScores(request, percentile, calculateGrade(percentile), answers);
+        susRepository.saveScores(request, percentile, grade, answers);
+
+        return SaveResponse.builder().percentile(percentile).grade(grade).build();
 
     }
 
@@ -77,7 +88,6 @@ public class SusService {
 
     private String calculateGrade(Double percentile) {
 
-        log.info("percentile=" + percentile);
         if (percentile >= 80.3)
             return "A";
         else if (percentile > 68)

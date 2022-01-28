@@ -32,9 +32,9 @@ micronaut:
 ---
 datasources:
   default:
-    url: jdbc:mysql://localhost:3306/susdb?enabledTLSProtocols=TLSv1.2
-    username: sususer
-    password: password
+    url: jdbc:mysql://${DB_HOST:`localhost`}:${DB_PORT:`3306`}/${DB_NAME:`susdb`}?enabledTLSProtocols=TLSv1.2
+    username: ${DB_USERNAME:`sususer`}
+    password: ${DB_PASSWORD:`password`}
     driverClassName: com.mysql.cj.jdbc.Driver
     dialect: MYSQL
     maximum-pool-size: 10
@@ -54,3 +54,15 @@ flyway:
 jackson:
   serialization:
     writeDatesAsTimestamps: false
+
+---
+endpoints:
+  all:
+    path: /management
+  health:
+    enabled: true
+    sensitive: false
+    details-visible: ANONYMOUS
+  prometheus:
+    enabled: true
+    sensitive: false

@@ -3,6 +3,7 @@ package com.sus.repository;
 import com.sus.domain.GradeStat;
 import com.sus.domain.ResponseTimes;
 import com.sus.domain.SessionDetails;
+import com.sus.error.SusException;
 import com.sus.model.SusRequest;
 import com.sus.model.Token;
 import io.micronaut.data.jdbc.annotation.JdbcRepository;
@@ -63,7 +64,7 @@ public class SusRepository {
             if (resultSet.next()) {
                 return jdbcOperations.readEntity(resultSet, SessionDetails.class);
             } else {
-                throw new RuntimeException("session not found");
+                throw new SusException("session not valid");
             }
         });
     }
