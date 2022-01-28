@@ -1,0 +1,6 @@
+applicationType: default
+defaultPackage: com.sus
+testFramework: junit
+sourceLanguage: java
+buildTool: gradle
+features: [annotation-api, app-name, assertj, data, data-jdbc, flyway, gradle, h2, http-client, java, java-application, jdbc-hikari, junit, logback, lombok, management, micrometer, micrometer-prometheus, micronaut-build, mockito, netty-server, reactor, reactor-http-client, readme, shade, yaml]

@@ -1,0 +1,56 @@
+micronaut:
+  application:
+    name: sus
+
+  server:
+    port: 8080
+    cors:
+      enabled: true
+
+  ssl:
+    enabled: false
+    buildSelfSigned: false
+    port: 8080
+
+  metrics:
+    enabled: true
+    export:
+      prometheus:
+        enabled: true
+        descriptions: true
+        step: PT1M
+
+  router:
+    static-resources:
+      swagger:
+        paths: classpath:META-INF/swagger
+        mapping: /swagger/**
+      swagger-ui:
+        paths: classpath:META-INF/swagger/views/swagger-ui
+        mapping: /swagger-ui/**
+
+---
+datasources:
+  default:
+    url: jdbc:mysql://localhost:3306/susdb?enabledTLSProtocols=TLSv1.2
+    username: sususer
+    password: password
+    driverClassName: com.mysql.cj.jdbc.Driver
+    dialect: MYSQL
+    maximum-pool-size: 10
+    minimum-idle: 1
+    connection-timeout: 15000
+    pool-name: default
+
+---
+flyway:
+  datasources:
+    default:
+      locations: classpath:databasemigrations
+      enabled: true
+      installed-by: sus-service
+
+---
+jackson:
+  serialization:
+    writeDatesAsTimestamps: false
