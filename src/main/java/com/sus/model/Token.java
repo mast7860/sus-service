@@ -7,7 +7,6 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Introspected
 @Validated
@@ -16,7 +15,7 @@ import java.util.UUID;
 @Builder(toBuilder = true)
 public class Token {
 
-    UUID sessionId;
+    String sessionId;
 
     LocalDateTime startDateTime;
 }

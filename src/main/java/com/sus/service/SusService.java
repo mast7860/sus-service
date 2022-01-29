@@ -1,5 +1,6 @@
 package com.sus.service;
 
+import com.sus.error.ErrorMessage;
 import com.sus.error.SusException;
 import com.sus.model.GlobalStats;
 import com.sus.model.SaveResponse;
@@ -16,6 +17,8 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static com.sus.utils.Utils.calculateGrade;
+
 @Slf4j
 @Singleton
 public class SusService {
@@ -31,23 +34,26 @@ public class SusService {
 
         Token token = Token.builder()
                 .startDateTime(LocalDateTime.now())
-                .sessionId(UUID.randomUUID())
+                .sessionId(UUID.randomUUID().toString())
                 .build();
 
         susRepository.createSession(token);
         return token;
     }
 
-    public SaveResponse saveUserResponse(SusRequest request) {
+    public SaveResponse saveUserResponse(String sessionId, SusRequest request) {
 
-        var sessionData = susRepository.getSession(request.getToken());
+        var sessionData = susRepository.getSession(sessionId);
         if (sessionData.getTimeSpentInSec() != null) {
-            throw new SusException("duplicate session");
+            throw new SusException(ErrorMessage.builder().code("SUS002").message("duplicate session").build());
         }
         var oddSum = request.getUsabilityResponses().stream().filter(scoreCard -> scoreCard.getQuestionNumber() % 2 != 0)
                 .mapToInt(UsabilityResponse::getScore).sum();
+        log.debug("oddSum=" + oddSum);
+
         var evenSum = request.getUsabilityResponses().stream().filter(scoreCard -> scoreCard.getQuestionNumber() % 2 == 0)
                 .mapToInt(UsabilityResponse::getScore).sum();
+        log.debug("evenSum=" + evenSum);
 
         var totalSum = ((oddSum - 5) + (25 - evenSum));
         log.debug("totalSum=" + totalSum);
@@ -58,48 +64,30 @@ public class SusService {
         var answers = request.getUsabilityResponses().stream()
                 .map(usabilityResponse -> usabilityResponse.getQuestionNumber() + "=" + usabilityResponse.getScore())
                 .collect(Collectors.joining(","));
-
         log.debug("answers=" + answers);
 
         var grade = calculateGrade(percentile);
         log.debug("grade=" + grade);
 
         susRepository.updateSession(sessionData);
-        susRepository.saveScores(request, percentile, grade, answers);
+        susRepository.saveScores(sessionId, percentile, grade, answers);
 
         return SaveResponse.builder().percentile(percentile).grade(grade).build();
-
     }
 
-    public GlobalStats getResponseTimes() {
-        var responseTimes = susRepository.getResponseTimes(LocalDate.now(), LocalDate.now());
-        var averagePercentile = susRepository.getAveragePercentile(LocalDate.now(), LocalDate.now());
-        var gradeStats = susRepository.getGradeCount(LocalDate.now(), LocalDate.now());
+    public GlobalStats getGlobalStats(LocalDate fromDateTime,
+                                      LocalDate toDateTime) {
+        var responseTimes = susRepository.getResponseTimes(fromDateTime, toDateTime);
+        var stats = susRepository.getAveragePercentile(fromDateTime, toDateTime);
+        var gradeStats = susRepository.getGradeCount(fromDateTime, toDateTime);
 
         return GlobalStats
                 .builder()
-                .percentile(averagePercentile)
-                .grade(calculateGrade(averagePercentile))
+                .percentile(stats.getAvgScore())
+                .grade(calculateGrade(stats.getAvgScore()))
                 .responseTimes(responseTimes)
                 .stats(gradeStats)
+                .totalCount(stats.getCount())
                 .build();
-
-    }
-
-    private String calculateGrade(Double percentile) {
-
-        if (percentile >= 80.3)
-            return "A";
-        else if (percentile > 68)
-            return "B";
-        else if (percentile == 68)
-            return "C";
-        else if (percentile >= 51)
-            return "D";
-        else if (percentile < 51)
-            return "F";
-        else
-            return "Z";
-
     }
 }

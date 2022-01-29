@@ -109,5 +109,4 @@ sample test data
 "1=4,2=2,3=4,4=3,5=5,6=1,7=3,8=1,9=1,10=3",68,D
 
 ## TODO:
-- unit tests
-- session handling
+- filtering stats

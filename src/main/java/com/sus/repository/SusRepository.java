@@ -1,10 +1,11 @@
 package com.sus.repository;
 
-import com.sus.domain.GradeStat;
+import com.sus.domain.GradeStats;
 import com.sus.domain.ResponseTimes;
 import com.sus.domain.SessionDetails;
+import com.sus.domain.Stats;
+import com.sus.error.ErrorMessage;
 import com.sus.error.SusException;
-import com.sus.model.SusRequest;
 import com.sus.model.Token;
 import io.micronaut.data.jdbc.annotation.JdbcRepository;
 import io.micronaut.data.jdbc.runtime.JdbcOperations;
@@ -41,7 +42,7 @@ public class SusRepository {
                 """;
 
         jdbcOperations.prepareStatement(insertSql, statement -> {
-            statement.setString(1, token.getSessionId().toString());
+            statement.setString(1, token.getSessionId());
             statement.setTimestamp(2, Timestamp.valueOf(token.getStartDateTime()));
             statement.executeUpdate();
             return TXN_SUCCESS_STATUS;
@@ -50,7 +51,7 @@ public class SusRepository {
 
     @Transactional
     @ReadOnly
-    public SessionDetails getSession(Token token) {
+    public SessionDetails getSession(String sessionId) {
 
         var selectSql = """
                 SELECT * FROM session_details
@@ -58,13 +59,13 @@ public class SusRepository {
                 """;
 
         return jdbcOperations.prepareStatement(selectSql, statement -> {
-            statement.setString(1, token.getSessionId().toString());
+            statement.setString(1, sessionId);
             var resultSet = statement.executeQuery();
 
             if (resultSet.next()) {
                 return jdbcOperations.readEntity(resultSet, SessionDetails.class);
             } else {
-                throw new SusException("session not valid");
+                throw new SusException(ErrorMessage.builder().code("SUS001").message("session not valid").build());
             }
         });
     }
@@ -93,6 +94,26 @@ public class SusRepository {
         });
     }
 
+    @Transactional
+    public void saveScores(String sessionId, Double score, String grade, String answers) {
+
+        var insertSql = """
+                INSERT INTO scores_details (session_id, answers, score, grade, score_time)
+                VALUES (?,?,?,?,?);
+                """;
+
+        jdbcOperations.prepareStatement(insertSql, statement -> {
+            statement.setString(1, sessionId);
+            statement.setString(2, answers);
+
+            statement.setDouble(3, score);
+            statement.setString(4, grade);
+            statement.setTimestamp(5, Timestamp.valueOf(LocalDateTime.now()));
+            statement.executeUpdate();
+            return TXN_SUCCESS_STATUS;
+        });
+    }
+
 
     @Transactional
     @ReadOnly
@@ -102,10 +123,16 @@ public class SusRepository {
                 MAX(time_spent_in_sec) AS max_time,
                 AVG(time_spent_in_sec) AS avg_time,
                 MIN(time_spent_in_sec) AS min_time
-                FROM session_details;
+                FROM session_details
+                WHERE time_spent_in_sec is not null
+                AND end_time >= ?
+                AND end_time < ?;
                 """;
 
         return jdbcOperations.prepareStatement(sql, statement -> {
+
+            statement.setTimestamp(1, Timestamp.valueOf(fromDate.atStartOfDay()));
+            statement.setTimestamp(2, Timestamp.valueOf(toDate.atStartOfDay().plusDays(1)));
 
             var resultSet = statement.executeQuery();
 
@@ -118,60 +145,62 @@ public class SusRepository {
     }
 
     @Transactional
-    public void saveScores(SusRequest susRequest, Double score, String grade, String answers) {
-
-        var insertSql = """
-                INSERT INTO scores_details (session_id, answers, score, grade, score_time)
-                VALUES (?,?,?,?,?);
-                """;
-
-        jdbcOperations.prepareStatement(insertSql, statement -> {
-            statement.setString(1, susRequest.getToken().getSessionId().toString());
-            statement.setString(2, answers);
-
-            statement.setDouble(3, score);
-            statement.setString(4, grade);
-            statement.setTimestamp(5, Timestamp.valueOf(LocalDateTime.now()));
-            statement.executeUpdate();
-            return TXN_SUCCESS_STATUS;
-        });
-    }
-
-    @Transactional
     @ReadOnly
-    public Double getAveragePercentile(LocalDate fromDate, LocalDate toDate) {
+    public Stats getAveragePercentile(LocalDate fromDate, LocalDate toDate) {
         var sql = """
-                SELECT
-                AVG(score) AS avg_score
-                FROM scores_details;
-                """;
+               SELECT
+               COUNT(*) AS count, AVG(score) AS avg_score
+               FROM scores_details
+               WHERE score_time >= ?
+               AND score_time < ?;
+               """;
 
         return jdbcOperations.prepareStatement(sql, statement -> {
-
+            statement.setTimestamp(1, Timestamp.valueOf(fromDate.atStartOfDay()));
+            statement.setTimestamp(2, Timestamp.valueOf(toDate.atStartOfDay().plusDays(1)));
             var resultSet = statement.executeQuery();
-
             if (resultSet.next()) {
-                return resultSet.getDouble(1);
+                return jdbcOperations.readEntity(resultSet, Stats.class);
             } else {
-                return 0.0;
+                return Stats.builder().build();
             }
         });
     }
 
     @Transactional
     @ReadOnly
-    public List<GradeStat> getGradeCount(LocalDate fromDate, LocalDate toDate) {
+    public List<GradeStats> getGradeCount(LocalDate fromDate, LocalDate toDate) {
         var sql = """
-                SELECT grade, COUNT(*) AS count
+                SELECT grade, COUNT(*) AS count, AVG(score) AS avg_grade_score
                 FROM scores_details
+                WHERE score_time >= ?
+                AND score_time < ?
                 GROUP BY grade;
                 """;
 
         return jdbcOperations.prepareStatement(sql, statement -> {
+            statement.setTimestamp(1, Timestamp.valueOf(fromDate.atStartOfDay()));
+            statement.setTimestamp(2, Timestamp.valueOf(toDate.atStartOfDay().plusDays(1)));
             var resultSet = statement.executeQuery();
-            return jdbcOperations.entityStream(resultSet, GradeStat.class).collect(Collectors.toList());
+            return jdbcOperations.entityStream(resultSet, GradeStats.class).collect(Collectors.toList());
         });
     }
 
+    @Transactional
+    public void deleteUnusedSessions() {
+
+        var insertSql = """
+                DELETE FROM session_details
+                WHERE end_time is null
+                AND start_time < ?
+                """;
+
+        jdbcOperations.prepareStatement(insertSql, statement -> {
+            statement.setTimestamp(1, Timestamp.valueOf(LocalDateTime.now().minusDays(1)));
+            int cleanedRows = statement.executeUpdate();
+            log.info("Cleaned Sessions="+cleanedRows);
+            return TXN_SUCCESS_STATUS;
+        });
+    }
 
 }

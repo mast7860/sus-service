@@ -17,9 +17,7 @@ public class SusExceptionHandler implements ExceptionHandler<SusException, HttpR
     public HttpResponse<ErrorMessage>
     handle(HttpRequest request, SusException exception) {
 
-        ErrorMessage message = new ErrorMessage();
-        message.setMessage(exception.getMessage());
-        return HttpResponse.serverError(message).
+        return HttpResponse.serverError(exception.getErrorMessage()).
                 status(HttpStatus.BAD_REQUEST);
     }
 }

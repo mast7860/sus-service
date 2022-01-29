@@ -58,7 +58,7 @@ public class LogService {
                         duration,
                         response.getBody().orElse(null));
             } else {
-                log.warn("direction=RESPONSE mtd={} uri={} status={} reason='{}' durationMs={} body={}",
+                log.info("direction=RESPONSE mtd={} uri={} status={} reason='{}' durationMs={} body={}",
                         request.getMethod(),
                         request.getUri(),
                         response.getStatus().getCode(),

@@ -1,6 +1,6 @@
 package com.sus.model;
 
-import com.sus.domain.GradeStat;
+import com.sus.domain.GradeStats;
 import com.sus.domain.ResponseTimes;
 import lombok.Builder;
 import lombok.Value;
@@ -11,11 +11,13 @@ import java.util.List;
 @Builder(toBuilder = true)
 public class GlobalStats {
 
-    List<GradeStat> stats;
+    long totalCount;
 
     Double percentile;
 
-    ResponseTimes responseTimes;
-
     String grade;
+
+    List<GradeStats> stats;
+
+    ResponseTimes responseTimes;
 }

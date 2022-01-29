@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.util.List;
 
@@ -17,10 +17,7 @@ import java.util.List;
 @Builder(toBuilder = true)
 public class SusRequest {
 
-    @NotNull
-    Token Token;
-
-    @Size(min = 10, max = 10)
-    @NotNull
+    @Size(min = 10, max = 10, message = "All 10 answers should be answered")
+    @NotEmpty(message = "response cannot be empty")
     List<UsabilityResponse> usabilityResponses;
 }

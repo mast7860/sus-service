@@ -1,9 +1,15 @@
 package com.sus.error;
 
+import lombok.Getter;
+
+@Getter
 public class SusException extends RuntimeException {
 
-    public SusException(String message) {
-        super(message);
+    private final ErrorMessage errorMessage;
+
+    public SusException(ErrorMessage errorMessage) {
+        super(errorMessage.getMessage());
+        this.errorMessage = errorMessage;
     }
 
 }

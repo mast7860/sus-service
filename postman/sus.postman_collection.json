@@ -1,0 +1,147 @@
+{
+	"info": {
+		"_postman_id": "a4571c89-f648-44b7-bae7-05d8e82cdade",
+		"name": "sus",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "prometheus-stats",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/management/prometheus",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"management",
+						"prometheus"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "health-stats",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/management/health",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"management",
+						"health"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getToken",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/v1/token",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getGlobalStats",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/v1/globalStats?fromDate=2022-01-28&toDate=2022-01-28",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"globalStats"
+					],
+					"query": [
+						{
+							"key": "fromDate",
+							"value": "2022-01-28"
+						},
+						{
+							"key": "toDate",
+							"value": "2022-01-28"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "saveResponse",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "sessionId",
+						"value": "d5e572d1-eb59-4e5e-9b16-46050a888696",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"usabilityResponses\": [\n    {\n      \"questionNumber\": 1,\n      \"score\": 5\n    },\n    {\n      \"questionNumber\": 2,\n      \"score\": 1\n    },\n    {\n      \"questionNumber\": 3,\n      \"score\": 5\n    },\n    {\n      \"questionNumber\": 4,\n      \"score\": 1\n    },\n    {\n      \"questionNumber\": 5,\n      \"score\": 5\n    },\n    {\n      \"questionNumber\": 6,\n      \"score\": 3\n    },\n    {\n      \"questionNumber\": 7,\n      \"score\": 3\n    },\n    {\n      \"questionNumber\": 8,\n      \"score\": 3\n    },\n    {\n      \"questionNumber\": 9,\n      \"score\": 3\n    },\n    {\n      \"questionNumber\": 10,\n      \"score\": 5\n    }\n  ]\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/v1/save",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"save"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

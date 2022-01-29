@@ -1,11 +1,20 @@
 plugins {
     id("com.github.johnrengelman.shadow") version "7.1.1"
     id("io.micronaut.application") version "3.1.1"
+    id ("jacoco")
 }
 
 version = "0.1"
 group = "com.sus"
 
+apply plugin: 'jacoco'
+
+jacocoTestReport {
+    dependsOn test
+    reports {
+        xml.enabled true
+    }
+}
 repositories {
     mavenCentral()
 }
@@ -37,18 +46,25 @@ dependencies {
     implementation("io.micronaut.sql:micronaut-jdbc-hikari")
     implementation("jakarta.annotation:jakarta.annotation-api")
     implementation("io.swagger.core.v3:swagger-annotations")
+    implementation("io.micronaut:micronaut-validation")
 
     compileOnly "com.google.code.findbugs:jsr305"
     compileOnly("org.projectlombok:lombok")
+
     runtimeOnly("ch.qos.logback:logback-classic")
     runtimeOnly "mysql:mysql-connector-java"
     runtimeOnly "io.micronaut.sql:micronaut-jdbc-hikari"
 
-    testImplementation("org.assertj:assertj-core")
-    implementation("io.micronaut:micronaut-validation")
+    testImplementation "io.micronaut.rxjava2:micronaut-rxjava2-http-client"
+    testImplementation "org.junit.jupiter:junit-jupiter-api"
+    testImplementation "io.micronaut.test:micronaut-test-junit5"
+    testImplementation "org.mockito:mockito-junit-jupiter"
+    testImplementation "org.assertj:assertj-core"
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-params'
 
-    testImplementation("org.mockito:mockito-core")
 
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
+    testRuntimeOnly "com.h2database:h2"
 }
 
 

@@ -9,8 +9,9 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 @Builder
-public class GradeStat {
+public class Stats {
 
-    String grade;
+    Double avgScore;
+
     long count;
 }
