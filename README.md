@@ -73,11 +73,6 @@ Service user for application
 CREATE USER 'userOne'@'%' IDENTIFIED BY 'password';
 GRANT SELECT, INSERT, UPDATE ON `ocfauroradb`.* TO 'userOne'@'%';
 
-Service user for flyway
-CREATE USER 'userTwo'@'%' IDENTIFIED BY 'add_user_password';
-GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, REFERENCES, INDEX, ALTER ON `dbName`.* TO 'userTwo'@'%'
-
-
 # To verify user and see validate grants
 select * from mysql.user;
 show grants for userName;
@@ -107,6 +102,3 @@ sample test data
 "1=2,2=1,3=4,4=3,5=5,6=1,7=3,8=1,9=1,10=3",65,D
 "1=2,2=2,3=4,4=3,5=5,6=1,7=3,8=1,9=1,10=3",63,D
 "1=4,2=2,3=4,4=3,5=5,6=1,7=3,8=1,9=1,10=3",68,D
-
-## TODO:
-- filtering stats

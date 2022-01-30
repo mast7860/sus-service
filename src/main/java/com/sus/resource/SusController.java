@@ -23,13 +23,11 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.Nullable;
 import javax.validation.Valid;
-
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 import static com.sus.utils.Utils.validateRequest;
 
-@Controller("/v1")
+@Controller
 @Slf4j
 public class SusController {
 

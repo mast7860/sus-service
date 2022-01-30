@@ -84,7 +84,7 @@ public class SusService {
         return GlobalStats
                 .builder()
                 .percentile(stats.getAvgScore())
-                .grade(calculateGrade(stats.getAvgScore()))
+                .grade(stats.getAvgScore()!=null ? calculateGrade(stats.getAvgScore()): "Z")
                 .responseTimes(responseTimes)
                 .stats(gradeStats)
                 .totalCount(stats.getCount())

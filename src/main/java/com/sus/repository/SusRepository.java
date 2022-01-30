@@ -175,7 +175,8 @@ public class SusRepository {
                 FROM scores_details
                 WHERE score_time >= ?
                 AND score_time < ?
-                GROUP BY grade;
+                GROUP BY grade
+                ORDER BY count ;
                 """;
 
         return jdbcOperations.prepareStatement(sql, statement -> {

@@ -60,7 +60,7 @@ class SusControllerTest {
 
         when(susService.generateSessionId()).thenReturn(Token.builder().sessionId(UUID.randomUUID().toString()).build());
 
-        var tokenRequest = HttpRequest.GET("/v1/token");
+        var tokenRequest = HttpRequest.GET("/token");
 
         var tokenResult = client.toBlocking().retrieve(tokenRequest, Token.class);
 
@@ -86,7 +86,7 @@ class SusControllerTest {
 
         when(susService.saveUserResponse(any(), any())).thenReturn(SaveResponse.builder().grade("A").build());
 
-        var saveRequest = HttpRequest.POST("/v1/save", response)
+        var saveRequest = HttpRequest.POST("/save", response)
                 .header("sessionId", sessionId);
 
         var saveResult = client.toBlocking().retrieve(saveRequest, SaveResponse.class);
@@ -99,7 +99,7 @@ class SusControllerTest {
                 .usabilityResponses(Arrays.asList(one, two, three, four, five, six, seven, eight, nine))
                 .build();
 
-        var saveRequestThree = HttpRequest.POST("/v1/save", responseThree)
+        var saveRequestThree = HttpRequest.POST("/save", responseThree)
                 .header("sessionId", UUID.randomUUID().toString());
 
         try {
@@ -129,7 +129,7 @@ class SusControllerTest {
                 .usabilityResponses(Arrays.asList(one, two, three, four, five, six, seven, eight, nine, ten))
                 .build();
 
-        var saveRequestTwo = HttpRequest.POST("/v1/save", response)
+        var saveRequestTwo = HttpRequest.POST("/save", response)
                 .header("sessionId", UUID.randomUUID().toString());
 
         when(susService.saveUserResponse(any(), any())).thenThrow(SusException.class);
@@ -145,7 +145,7 @@ class SusControllerTest {
     void getGlobalStatus() {
 
         when(susService.getGlobalStats(any(),any())).thenReturn(GlobalStats.builder().grade("A").build());
-        var statsRequest = HttpRequest.GET("/v1/globalStats");
+        var statsRequest = HttpRequest.GET("/globalStats");
 
         var statsResponse = client.toBlocking().retrieve(statsRequest, GlobalStats.class);
 
