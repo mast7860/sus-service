@@ -25,6 +25,7 @@ import javax.annotation.Nullable;
 import javax.validation.Valid;
 import java.time.LocalDate;
 
+import static com.sus.utils.Utils.validateDates;
 import static com.sus.utils.Utils.validateRequest;
 
 @Controller
@@ -83,6 +84,8 @@ public class SusController {
 
         var from = fromDate!=null ? fromDate : LocalDate.now().minusMonths(1);
         var to = toDate!=null ? toDate : LocalDate.now();
+
+        validateDates(fromDate,toDate);
 
         return Single
                 .just(susService.getGlobalStats(from,to))

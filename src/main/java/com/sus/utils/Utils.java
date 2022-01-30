@@ -7,6 +7,8 @@ import com.sus.model.UsabilityResponse;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class Utils {
 
@@ -41,6 +43,22 @@ public final class Utils {
                     .message("duplicate questions received")
                     .build());
         }
+    }
+
+    public static void validateDates(LocalDate fromDate, LocalDate toDate){
+
+        if(fromDate!=null && fromDate.isAfter(LocalDate.now())){
+            throw new SusException(ErrorMessage.builder().message("From date cannot be after current date").code("SUS003").build());
+        }
+
+        if(toDate!=null && toDate.isBefore(LocalDate.now())){
+            throw new SusException(ErrorMessage.builder().message("To date cannot be after current date").code("SUS004").build());
+        }
+
+        if((fromDate!=null && toDate!=null) && (fromDate.isAfter(toDate))){
+            throw new SusException(ErrorMessage.builder().message("From date cannot be after To date").code("SUS005").build());
+        }
+
     }
 
 }
