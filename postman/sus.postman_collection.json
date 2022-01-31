@@ -56,14 +56,13 @@
 					}
 				],
 				"url": {
-					"raw": "http://localhost:8080/v1/token",
+					"raw": "http://localhost:8080/token",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"v1",
 						"token"
 					]
 				}
@@ -81,24 +80,25 @@
 					}
 				],
 				"url": {
-					"raw": "http://localhost:8080/v1/globalStats?fromDate=2022-01-28&toDate=2022-01-28",
+					"raw": "http://localhost:8080/globalStats",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"v1",
 						"globalStats"
 					],
 					"query": [
 						{
 							"key": "fromDate",
-							"value": "2022-01-28"
+							"value": "2022-01-28",
+							"disabled": true
 						},
 						{
 							"key": "toDate",
-							"value": "2022-01-28"
+							"value": "2022-01-28",
+							"disabled": true
 						}
 					]
 				}
@@ -126,17 +126,16 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"usabilityResponses\": [\n    {\n      \"questionNumber\": 1,\n      \"score\": 5\n    },\n    {\n      \"questionNumber\": 2,\n      \"score\": 1\n    },\n    {\n      \"questionNumber\": 3,\n      \"score\": 5\n    },\n    {\n      \"questionNumber\": 4,\n      \"score\": 1\n    },\n    {\n      \"questionNumber\": 5,\n      \"score\": 5\n    },\n    {\n      \"questionNumber\": 6,\n      \"score\": 3\n    },\n    {\n      \"questionNumber\": 7,\n      \"score\": 3\n    },\n    {\n      \"questionNumber\": 8,\n      \"score\": 3\n    },\n    {\n      \"questionNumber\": 9,\n      \"score\": 3\n    },\n    {\n      \"questionNumber\": 10,\n      \"score\": 5\n    }\n  ]\n}"
+					"raw": "{\n    \"usabilityResponses\": [\n        {\n            \"questionNumber\": 1,\n            \"score\": \"2\"\n        },\n        {\n            \"questionNumber\": 2,\n            \"score\": \"3\"\n        },\n        {\n            \"questionNumber\": 3,\n            \"score\": \"1\"\n        },\n        {\n            \"questionNumber\": 4,\n            \"score\": \"2\"\n        },\n        {\n            \"questionNumber\": 5,\n            \"score\": \"4\"\n        },\n        {\n            \"questionNumber\": 6,\n            \"score\": \"3\"\n        },\n        {\n            \"questionNumber\": 7,\n            \"score\": \"3\"\n        },\n        {\n            \"questionNumber\": 8,\n            \"score\": \"2\"\n        },\n        {\n            \"questionNumber\": 9,\n            \"score\": \"4\"\n        },\n        {\n            \"questionNumber\": 10,\n            \"score\": \"4\"\n        }\n    ]\n}"
 				},
 				"url": {
-					"raw": "http://localhost:8080/v1/save",
+					"raw": "http://localhost:8080/save",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"v1",
 						"save"
 					]
 				}

@@ -51,7 +51,7 @@ public final class Utils {
             throw new SusException(ErrorMessage.builder().message("From date cannot be after current date").code("SUS003").build());
         }
 
-        if(toDate!=null && toDate.isBefore(LocalDate.now())){
+        if((fromDate!=null && toDate!=null) && toDate.isBefore(fromDate)){
             throw new SusException(ErrorMessage.builder().message("To date cannot be after current date").code("SUS004").build());
         }
 

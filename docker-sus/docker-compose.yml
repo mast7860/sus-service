@@ -4,6 +4,7 @@ services:
 
   mysql-server:
     image: mysql:latest
+    container_name: mysql-server
     volumes:
       - db_data:/var/lib/mysql
     restart: always
@@ -18,6 +19,7 @@ services:
       - '3306'
 
   sus-service:
+    container_name: sus-service
     build:
       context: ../../sus-service
     environment:
@@ -26,6 +28,24 @@ services:
       - DB_NAME=susdb
       - DB_USERNAME=sususer
       - DB_PASSWORD=password
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql-server
+
+  sus-client:
+    container_name: sus-client
+    build:
+      context: ../../sus-client
+    volumes:
+      - './:/app'
+      - '/app/node_modules'
+    ports:
+      - '3001:3000'
+    stdin_open: true
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    command: npm start
 
 volumes:
   db_data: {}

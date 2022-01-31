@@ -89,16 +89,17 @@ https://www.usability.gov/how-to-and-tools/methods/system-usability-scale.html
 51-68 - D
 <51 - F
 ```
+# How to Run Full setup locally
 
-sample test data
-
-"1=3,2=5,3=4,4=4,5=5,6=5,7=5,8=5,9=5,10=5",45,F
-"1=5,2=1,3=4,4=4,5=5,6=5,7=5,8=5,9=5,10=5",60,D
-"1=5,2=1,3=4,4=3,5=5,6=5,7=5,8=5,9=5,10=5",63,D
-"1=5,2=1,3=4,4=3,5=5,6=1,7=5,8=5,9=5,10=5",73,B
-"1=5,2=1,3=4,4=3,5=5,6=1,7=5,8=2,9=5,10=3",85,A
-"1=5,2=1,3=4,4=3,5=5,6=1,7=5,8=2,9=1,10=3",75,B
-"1=5,2=1,3=4,4=3,5=5,6=1,7=3,8=1,9=1,10=3",73,B
-"1=2,2=1,3=4,4=3,5=5,6=1,7=3,8=1,9=1,10=3",65,D
-"1=2,2=2,3=4,4=3,5=5,6=1,7=3,8=1,9=1,10=3",63,D
-"1=4,2=2,3=4,4=3,5=5,6=1,7=3,8=1,9=1,10=3",68,D
+- get client n monitoring setup code in the same directory as service
+- git clone https://github.com/mast7860/sus-client.git
+- git clone https://github.com/mast7860/monitoring.git
+- The project contains docker-sus , which runs mysql, client and server
+- run ./gradlew build to build the project
+- then docker compose build && docker compose up
+- RUN readme of monitoring , make needed changes and start the container
+- In the sus-service
+  - grafana folder contains dashboard json which can  be imported to see in dashboard
+  - the postman folder contains postman collection , used to test api from postman tool
+- http://localhost:8080/swagger-ui#/ : can see the api contact
+- java 17 , gradle 7.3.3 , docker are needed at minimum to run 
