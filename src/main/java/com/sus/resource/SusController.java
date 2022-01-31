@@ -82,10 +82,11 @@ public class SusController {
 
         log.debug("getting global stats");
 
+        validateDates(fromDate,toDate);
+
         var from = fromDate!=null ? fromDate : LocalDate.now().minusMonths(1);
         var to = toDate!=null ? toDate : LocalDate.now();
 
-        validateDates(fromDate,toDate);
 
         return Single
                 .just(susService.getGlobalStats(from,to))
