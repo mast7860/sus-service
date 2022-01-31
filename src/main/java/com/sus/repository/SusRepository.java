@@ -21,6 +21,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("ClassCanBeRecord")
 @JdbcRepository(dialect = Dialect.MYSQL)
 @Slf4j
 public class SusRepository {

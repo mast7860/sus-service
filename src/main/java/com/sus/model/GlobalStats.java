@@ -9,6 +9,7 @@ import java.util.List;
 
 @Value
 @Builder(toBuilder = true)
+@SuppressWarnings("ClassCanBeRecord")
 public class GlobalStats {
 
     long totalCount;

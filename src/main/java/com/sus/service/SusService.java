@@ -21,6 +21,7 @@ import static com.sus.utils.Utils.calculateGrade;
 
 @Slf4j
 @Singleton
+@SuppressWarnings("ClassCanBeRecord")
 public class SusService {
 
     private final SusRepository susRepository;
