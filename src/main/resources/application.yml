@@ -3,14 +3,14 @@ micronaut:
     name: sus
 
   server:
-    port: 8080
+    port: ${PORT:8080}
     cors:
       enabled: true
 
   ssl:
     enabled: false
     buildSelfSigned: false
-    port: 8080
+    port: ${PORT:8080}
 
   metrics:
     enabled: true
@@ -32,11 +32,11 @@ micronaut:
 ---
 datasources:
   default:
-    url: jdbc:mysql://${DB_HOST:`localhost`}:${DB_PORT:`3306`}/${DB_NAME:`susdb`}?enabledTLSProtocols=TLSv1.2
+    url: jdbc:postgresql://${DB_HOST:`localhost`}:${DB_PORT:`5432`}/${DB_NAME:`susdb`}
     username: ${DB_USERNAME:`sususer`}
     password: ${DB_PASSWORD:`password`}
-    driverClassName: com.mysql.cj.jdbc.Driver
-    dialect: MYSQL
+    driverClassName: org.postgresql.Driver
+    dialect: POSTGRES
     maximum-pool-size: 10
     minimum-idle: 1
     connection-timeout: 15000

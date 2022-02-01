@@ -1,0 +1,1 @@
+web: java $JAVA_OPTS -XX:+ShowCodeDetailsInExceptionMessages -XX:+UnlockExperimentalVMOptions -XX:+UseZGC -Dmicronaut.environments=heroku -Dserver.port=$PORT -Dssl.port=$PORT -jar build/libs/sus-service-0.1-all.jar

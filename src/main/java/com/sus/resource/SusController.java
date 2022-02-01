@@ -92,4 +92,15 @@ public class SusController {
                 .just(susService.getGlobalStats(from,to))
                 .map(HttpResponse::ok);
     }
+
+
+    @Get
+    public Single<HttpResponse<String>> home() {
+
+        log.debug("getting session ID");
+
+        return Single
+                .just("Service is running")
+                .map(HttpResponse::ok);
+    }
 }

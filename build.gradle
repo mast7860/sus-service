@@ -19,6 +19,20 @@ repositories {
     mavenCentral()
 }
 
+run.classpath += configurations.developmentOnly
+run.jvmArgs('-XX:TieredStopAtLevel=1')
+
+assemble.dependsOn shadowJar
+
+configurations {
+    // for dependencies that are needed for development only
+    developmentOnly
+}
+
+shadowJar {
+    mergeServiceFiles()
+}
+
 micronaut {
     runtime("netty")
     testRuntime("junit5")
@@ -47,12 +61,12 @@ dependencies {
     implementation("jakarta.annotation:jakarta.annotation-api")
     implementation("io.swagger.core.v3:swagger-annotations")
     implementation("io.micronaut:micronaut-validation")
-
+    implementation group: 'org.bouncycastle', name: 'bcpkix-jdk15on', version: 1.70
     compileOnly "com.google.code.findbugs:jsr305"
     compileOnly("org.projectlombok:lombok")
 
     runtimeOnly("ch.qos.logback:logback-classic")
-    runtimeOnly "mysql:mysql-connector-java"
+    runtimeOnly "org.postgresql:postgresql"
     runtimeOnly "io.micronaut.sql:micronaut-jdbc-hikari"
 
     testImplementation "io.micronaut.rxjava2:micronaut-rxjava2-http-client"
@@ -71,9 +85,28 @@ dependencies {
 application {
     mainClass.set("com.sus.Application")
 }
+
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'com.sus.Application'
+        )
+    }
+}
 java {
     sourceCompatibility = JavaVersion.toVersion("17")
     targetCompatibility = JavaVersion.toVersion("17")
 }
+
+tasks.withType(JavaCompile){
+    options.encoding = "UTF-8"
+    options.compilerArgs = [
+            '-parameters'
+    ]
+}
+
+task stage(dependsOn: ['build', 'clean'])
+
+build.mustRunAfter clean
 
 graalvmNative.toolchainDetection = false

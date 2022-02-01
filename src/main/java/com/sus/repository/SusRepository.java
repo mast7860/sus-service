@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @SuppressWarnings("ClassCanBeRecord")
-@JdbcRepository(dialect = Dialect.MYSQL)
+@JdbcRepository(dialect = Dialect.POSTGRES)
 @Slf4j
 public class SusRepository {
 
