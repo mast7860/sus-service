@@ -103,3 +103,4 @@ https://www.usability.gov/how-to-and-tools/methods/system-usability-scale.html
   - the postman folder contains postman collection , used to test api from postman tool
 - http://localhost:8080/swagger-ui#/ : can see the api contact
 - java 17 , gradle 7.3.3 , docker are needed at minimum to run 
+- The GUI can be loaded using : http://localhost:3001/
